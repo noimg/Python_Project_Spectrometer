@@ -25,6 +25,7 @@ def main():
         
     # 初始化并执行校准
     spec = Spectrometer()
+    # 要不要考虑没看到全部谱线的情况呢……
     try:
         k, b, r_squared = spec.calibrate(hg_degrees, HG_STANDARD_WAVELENGTHS)
     except Exception as e:

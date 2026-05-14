@@ -3,7 +3,66 @@ from tkinter import messagebox
 import matplotlib.pyplot as plt
 import numpy as np
 from typing import Optional, List
-from tools import wavelength_to_rgb
+# from tools import wavelength_to_rgb
+
+
+def wavelength_to_rgb(wavelength: float, gamma: float = 0.8) -> tuple[int, int, int]:
+    """
+    将可见光波长（单位：nm）转换为 0~255 的 RGB 颜色值。
+    
+    :param wavelength: 波长值，推荐范围 380~780 nm
+    :param gamma: 显示器 Gamma 校正系数，默认 0.8
+    :return: (R, G, B) 元组，范围 0~255
+    """
+    w = float(wavelength)
+    
+    # 超出可见光范围返回黑色
+    if w < 380 or w > 780:
+        return (0, 0, 0)
+
+    # 1. 分段线性映射到 [0, 1]
+    if 380 <= w <= 440:
+        r = -(w - 440) / (440 - 380)
+        g = 0.0
+        b = 1.0
+    elif 440 <= w <= 490:
+        r = 0.0
+        g = (w - 440) / (490 - 440)
+        b = 1.0
+    elif 490 <= w <= 510:
+        r = 0.0
+        g = 1.0
+        b = -(w - 510) / (510 - 490)
+    elif 510 <= w <= 580:
+        r = (w - 510) / (580 - 510)
+        g = 1.0
+        b = 0.0
+    elif 580 <= w <= 645:
+        r = 1.0
+        g = -(w - 645) / (645 - 580)
+        b = 0.0
+    elif 645 <= w <= 780:
+        r = 1.0
+        g = 0.0
+        b = 0.0
+    else:
+        r = g = b = 0.0
+
+    # 2. 人眼敏感度边缘衰减（380~420nm 与 700~780nm）
+    if 380 <= w <= 420:
+        factor = 0.3 + 0.7 * (w - 380) / (420 - 380)
+    elif 700 <= w <= 780:
+        factor = 0.3 + 0.7 * (780 - w) / (780 - 700)
+    else:
+        factor = 1.0
+
+    # 3. 应用强度衰减与  Gamma 校正
+    r = (r * factor) ** gamma
+    g = (g * factor) ** gamma
+    b = (b * factor) ** gamma
+
+    # 4. 缩放到 0~255 并取整
+    return (int(round(r * 255)), int(round(g * 255)), int(round(b * 255)))
 
 def get_inputs_from_popup(hints: List[str], title: str = "请输入信息") -> Optional[List[str]]:
     """
