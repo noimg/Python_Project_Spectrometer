@@ -9,10 +9,13 @@ def main():
     print("=== 手制光谱仪数据可视化分析项目启动 ===")
     
     # 1. 汞灯校准阶段
-    print("等待输入汞灯校准数据...")
-    hg_hints = [f"{color} (约 {wl} nm):" for color, wl in zip(HG_STANDARD_COLORS, HG_STANDARD_WAVELENGTHS)]
-    hg_inputs_str = get_inputs_from_popup(hg_hints, title="第一步：输入汞灯7条可见光谱线读数(度)")
+    # print("等待输入汞灯校准数据...")
+    # hg_hints = [f"{color} (约 {wl} nm):" for color, wl in zip(HG_STANDARD_COLORS, HG_STANDARD_WAVELENGTHS)]
+    # hg_inputs_str = get_inputs_from_popup(hg_hints, title="第一步：输入汞灯7条可见光谱线读数(度)")
     
+    # 我自己的数据，懒得输了，需要的话可以去掉。以及并非str（）
+    hg_inputs_str = [-2.5, -1, 2.8, 4.3, 4.7, 5, 8.6]
+        
     if not hg_inputs_str:
         print("已取消汞灯校准，程序退出。")
         return
@@ -35,6 +38,18 @@ def main():
     print(f"校准成功! \n拟合直线: λ = {k:.4f}θ + {b:.4f}\n决定系数 R² = {r_squared:.4f}")
     plot_calibration_curve(hg_degrees, HG_STANDARD_WAVELENGTHS, k, b, r_squared)
     
+    # 绘制λ-θ图，便于完成实验报告，最好还要有x,y,xy,x^2等数据
+    print(f"你的实验报告上面会是θ = {1 / k:.4f}λ + {-b / k:.4f}")
+    plot_calibration_curve(HG_STANDARD_WAVELENGTHS, hg_degrees, k, b, r_squared, type='λ-θ')
+
+    # 添加了神奇妙妙汞灯图，可以注释掉。
+    # sample_hg_wls = spec.convert_degrees_to_wavelengths(hg_degrees)
+    # plot_comparison_spectrum(
+    #         measured_wls=sample_hg_wls, 
+    #         reference_wls=HG_STANDARD_WAVELENGTHS, 
+    #         element_name="Hg"
+    #     )
+
     # 2. 样本测量与匹配阶段
     analyzer = SpectrumAnalyzer()
     

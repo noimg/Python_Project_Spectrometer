@@ -158,24 +158,54 @@ def get_dynamic_inputs_from_popup(prompt: str, title: str = "请输入测量数�
     root.mainloop()
     return result
 
-def plot_calibration_curve(degrees: list, wavelengths: list, k: float, b: float, r_squared: float):
-    """绘制校准曲线（散点与拟合直线图）"""
-    plt.figure(figsize=(8, 5))
+    root.mainloop()
+    return result
+def plot_calibration_curve(degrees: list, wavelengths: list, k: float, 
+                           b: float, r_squared: float, type: str='λ-θ'): 
+    """绘制校准曲线（散点与拟合直线图）
     
-    x = np.array(degrees)
-    y = np.array(wavelengths)
-    x_line = np.linspace(min(x) - 1, max(x) + 1, 100)
-    y_line = k * x_line + b
+    Args:
+        degrees: 光谱仪角度读数列表
+        wavelengths: 标准波长列表
+        k: 拟合直线斜率 (λ = kθ + b)
+        b: 拟合直线截距
+        r_squared: 决定系数
+        type: 图表类型 'λ-θ' (波长-角度) 或 'θ-λ' (角度-波长)
+    """ 
+    plt.figure(figsize=(8, 5)) 
+    if type == 'λ-θ':
+        # λ-θ 模式：波长作为y轴，角度作为x轴
+        x = np.array(degrees)
+        y = np.array(wavelengths)
+        x_line = np.linspace(min(x) - 1, max(x) + 1, 100)
+        y_line = k * x_line + b
+        
+        plt.scatter(x, y, color='blue', s=50, label='Measured Points', zorder=5)
+        plt.plot(x_line, y_line, color='red', linestyle='--', 
+                 label=f'Fit: λ = {k:.2f}θ + {b:.2f}')
+        
+        plt.title(f"Calibration: Wavelength vs Angle (R² = {r_squared:.4f})", fontsize=14)
+        plt.xlabel("Spectrometer Reading (Degrees)", fontsize=12)
+        plt.ylabel("Standard Wavelength (nm)", fontsize=12)
+    else:
+        # θ-λ 模式：角度作为y轴，波长作为x轴
+        x = np.array(wavelengths)
+        y = np.array(degrees)
+        x_line = np.linspace(min(x) - 10, max(x) + 10, 100)
+        # θ = (1/k)λ - b/k
+        y_line = (1/k) * x_line - b/k
+        
+        plt.scatter(x, y, color='green', s=50, label='Measured Points', zorder=5)
+        plt.plot(x_line, y_line, color='orange', linestyle='--', 
+                 label=f'Fit: θ = {(1/k):.4f}λ + {(-b/k):.4f}')
+        
+        plt.title(f"Calibration: Angle vs Wavelength (R² = {r_squared:.4f})", fontsize=14)
+        plt.xlabel("Standard Wavelength (nm)", fontsize=12)
+        plt.ylabel("Spectrometer Reading (Degrees)", fontsize=12)
     
-    plt.scatter(x, y, color='blue', s=50, label='Measured Points', zorder=5)
-    plt.plot(x_line, y_line, color='red', linestyle='--', label=f'Fit: λ = {k:.2f}θ + {b:.2f}')
-    
-    plt.title(f"Spectrometer Calibration (R² = {r_squared:.4f})", fontsize=14)
-    plt.xlabel("Spectrometer Reading (Degrees)", fontsize=12)
-    plt.ylabel("Standard Wavelength (nm)", fontsize=12)
-    plt.legend()
-    plt.grid(True, linestyle=':', alpha=0.7)
-    plt.tight_layout()
+    plt.legend() 
+    plt.grid(True, linestyle=':', alpha=0.7) 
+    plt.tight_layout() 
     plt.show()
 
 def plot_comparison_spectrum(measured_wls: list, reference_wls: list, element_name: str, title: str="Spectrum Comparison"):
