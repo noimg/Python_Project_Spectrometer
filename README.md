@@ -20,11 +20,11 @@
   `class Spectrometer`:
 
   - 属性: `k`, `b`, `r_squared`, `is_calibrated`
-  - 方法 `calibrate(measured_degrees)`: 接收汞灯的测量刻度，计算并存储拟合参数。
+  - 方法 `calibrate(measured_degrees)`: 接收汞灯的测量刻度，计算并存储拟合参数（迁移原 `calibrate_spectrometer` 逻辑）。
   - 方法 `degrees_to_wavelengths(degrees)`: 将读数转换为波长。
 
 - **`analyzer.py` (光谱匹配算法)**
-  核心的分析模块，封装了 `SpectrumAnalyzer` 类。基于 **DTW (Dynamic Time Warping，动态时间规整)** 算法计算测量光谱序列与已知元素标准光谱序列之间的“距离”。
+  核心的分析模块，封装了 `SpectrumAnalyzer` 类。基于 **DTW (Dynamic Time Warping，动态时间规整)** 算法计算测量光谱序列与已知元素标准光谱序列之间的“距离”。DTW 能够有效处理观测谱线遗漏或杂散光导致的多余谱线问题，找到最佳匹配的元素成分。算法通过除以序列最大长度（`max(len(measured), len(ref))`）来进行距离标准化，确保结果的公平性。
 
   - **计算 DTW 距离**
   	对于每一对序列 $(X, Y_k)$，用动态规划计算累计距离矩阵 $D$：
