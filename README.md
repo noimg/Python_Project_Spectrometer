@@ -10,9 +10,7 @@
   将所有已知的物理常量和光谱数据集中管理，便于后续添加新元素。
 
   - `HG_STANDARD_WAVELENGTHS`: 汞灯标准波长列表。
-  
   - `HG_STANDARD_COLORS`: 汞灯可见光颜色描述（Violet, Blue 等）。
- 
   - `KNOWN_ELEMENTS_SPECTRA`: 候选元素的特征光谱波长字典（H, He, Ar, Ne等）。
   
 - **`spectrometer.py` (光谱仪硬件模拟)**
