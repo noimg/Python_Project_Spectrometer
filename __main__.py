@@ -1,14 +1,12 @@
 import tkinter as tk
 from tkinter import messagebox
+
+from analyzer import SpectrumAnalyzer
 from config import HG_STANDARD_COLORS, HG_STANDARD_WAVELENGTHS
 from spectrometer import Spectrometer
-from analyzer import SpectrumAnalyzer
-from visualization import (
-    get_inputs_from_popup,
-    get_dynamic_inputs_from_popup,
-    plot_calibration_curve,
-    plot_comparison_spectrum,
-)
+from visualization import (get_dynamic_inputs_from_popup,
+                           get_inputs_from_popup, plot_calibration_curve,
+                           plot_comparison_spectrum)
 
 
 def main():

@@ -1,8 +1,9 @@
 import tkinter as tk
 from tkinter import messagebox
+from typing import List, Optional
+
 import matplotlib.pyplot as plt
 import numpy as np
-from typing import Optional, List
 
 # from tools import wavelength_to_rgb
 
