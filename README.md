@@ -31,16 +31,12 @@
   
   	- 初始化 $D[0][0] = 0$, $D[i][0] = \infty$, $D[0][j] = \infty$。
   	- 递推公式：
-  	  $$
-  	  D[i][j] = d(x_i, y_j) + \min(D[i-1][j], D[i][j-1], D[i-1][j-1])
-  	  $$
+  	  $$D[i][j] = d(x_i, y_j) + \min(D[i-1][j], D[i][j-1], D[i-1][j-1])$$
   	- 最终 DTW 距离为 $\text{DTW}(X, Y_k) = D[n][l_k]$，其中 $l_k$ 为 $Y_k$ 的长度。
   
   - **选择最匹配序列**
      计算 $X$ 与所有 $Y_k \in \mathcal{T}$ 的 DTW 距离，选出距离最小的序列：
-     $$
-     Y^* = \arg \min_{Y_k \in \mathcal{T}} \text{DTW}(X, Y_k)
-     $$
+     $$Y^* = \arg \min_{Y_k \in \mathcal{T}} \text{DTW}(X, Y_k)$$
   
 - **`visualization.py` (GUI 与可视化绘图)**
   交互界面与可视化渲染模块。
