@@ -212,6 +212,9 @@ def plot_comparison_spectrum(measured_wls: list, reference_wls: list, element_na
     """绘制两个光谱的比对图（上下子图）"""
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 6), sharex=True)
     
+    if len(measured_wls) <= 2 :
+        print("此匹配准确度较低，建议自行使用排除法等方法分析")
+
     all_wls = measured_wls + reference_wls
     min_w = min(all_wls) - 30 if all_wls else 380
     max_w = max(all_wls) + 30 if all_wls else 780
