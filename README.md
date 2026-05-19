@@ -70,6 +70,25 @@
 3. **DTW 算法比对**：将转换后的波长序列送入 `analyzer.py`，遍历已知候选元素库，计算并评估两序列之间的归一化 DTW 距离，得分最小者即得出匹配度最高的候选元素。
 4. **可视化比对输出**：调用 `visualization.py` 中的`plot_comparison_spectrum()`绘制“发射光谱比对图”。图表上方展示实测样本的光谱线分布，下方展示匹配出元素的标准特征光谱线分布，辅助用户直观地完成实验报告的论证。
 
+```mermaid 
+graph TD
+    %% 模块节点定义
+    Main["__main__.py<br>（主程序入口 / 调度中心）"]
+    Vis["visualization.py<br>（GUI交互 与 可视化绘图）"]
+    Spec["spectrometer.py<br>（光谱仪硬件模拟 / 数据转换）"]
+    Ana["analyzer.py<br>（DTW 光谱匹配算法）"]
+    Conf["config.py<br>（物理常量 与 数据中心）"]
+
+    %% 主程序对功能模块的调用关系
+    Main -->|1. 弹窗获取用户输入 / 渲染输出图表| Vis
+    Main -->|2. 传入汞灯读数进行校准 / 转换未知样本波长| Spec
+    Main -->|3. 传入转换后的波长数据进行 DTW 序列比对| Ana
+
+    %% 功能模块对底层数据字典的依赖关系
+    Spec -.->|读取汞灯标准波长进行线性拟合| Conf
+    Ana -.->|读取候选元素的特征光谱库进行距离计算| Conf
+```
+
 ```mermaid
 flowchart TD
     %% 阶段一：校准流程（第一行）
